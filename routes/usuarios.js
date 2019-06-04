@@ -64,11 +64,12 @@ router.post('/login', function(req, res) {
         .catch((error) => res.status(400).send(error));
 });
 
-router.get('/onlyCuenta/:id', (req, res) =>{
+router.get('/mostrarCuentas/:id', (req, res) =>{
   User                
   .findAll()
   .then(data => res.status(200).send(data));
 });
+
 
 getToken = function (headers) {
     if (headers && headers.authorization) {

@@ -3,7 +3,7 @@ const router = express.Router();
 const Personal = require('../models').Registro_personal;
 
 ////registro
-router.post('/registro', function(req, res) {
+router.post('/personal', function(req, res) {
     console.log(req.body);
     Personal.findAll({
       where: {ci: req.body.ci},
@@ -34,7 +34,7 @@ router.post('/registro', function(req, res) {
       }
     })
   });
-router.get('/getpersonal', (req, res) =>{
+router.get('/personal', (req, res) =>{
     Personal                
     .findAll()
     .then(data => res.status(200).send(data));

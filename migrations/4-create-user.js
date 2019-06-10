@@ -17,9 +17,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      estado: {
-        type: Sequelize.BOOLEAN
-      },
       tipo_usuario:{
         type: Sequelize.STRING
       },

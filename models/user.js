@@ -20,12 +20,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull:{
         args: false,
       },       
-    },
-    estado:{
-      type: DataTypes.BOOLEAN,
-      allowNull:{
-        default: false,
-      }
     }, 
     tipo_usuario:{
       type:  DataTypes.STRING,

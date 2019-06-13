@@ -14,7 +14,9 @@ router.post('/userCuenta/:idReg_personal', (req, res) =>{
       where: {correo: req.body.correo},
     }).then((correo) =>{
       if(correo !=""){
-        res.status(200).send("ya existe el correo.")
+        res.status(202).send({
+          "msn" : "ya existe el correo."
+        })
       }else {
         User
           .create({
@@ -24,14 +26,6 @@ router.post('/userCuenta/:idReg_personal', (req, res) =>{
             tipo_usuario: req.body.tipo_usuario,
             idReg_personal: req.params.idReg_personal
 
-          }).then((user) =>{
-            if(user){
-              var token = jwt.sign(JSON.parse(JSON.stringify(user)), 'nodeauthsecret', {expiresIn: 86400 * 30});
-              jwt.verify(token, 'nodeauthsecret', function(err, data){
-                console.log(err, data);
-              })
-              res.json({success: true, token: 'JWT ' + token});
-            }
           }).then((user) => res.status(201).send({
             success: true,
             message: 'Usuario creado correctamente.',
@@ -44,6 +38,7 @@ router.post('/userCuenta/:idReg_personal', (req, res) =>{
       }
     })
   });
+
 ///login
 router.post('/login', function(req, res) {
     User.findOne({
@@ -61,11 +56,11 @@ router.post('/login', function(req, res) {
             if(isMatch && !err) {
               var token = jwt.sign(JSON.parse(JSON.stringify(user)), 'nodeauthsecret', {expiresIn: 86400 * 30});
               jwt.verify(token, 'nodeauthsecret', function(err, data){
-                console.log(err, data);
+                console.log(err, data, "  <<<<<<<<<<<<<<<<<");
               })
               res.json({success: true, token: 'JWT ' + token});
             } else {
-              res.status(401).send({success: false, msg: 'fallo el correo.'});
+              res.status(500).send({success: false, msg: 'fallo el contraseña.'});
             }
           })
         })
@@ -93,96 +88,5 @@ router.get('/usersAll', (req,res) => {
   .then(data => res.status(200).send(data));
 });
 
-/*router.get('/userCueCAP', (req, res) => {
-  res.render('ruserCueCAP');
-});
- router .post('/userCueCAP/:id', async(req , res) =>{
-   var reg_user = {
-    correo: req.body.correo,
-    contraseña: req.body.contraseña,
-    contraseña1: req.body.contraseña1,
-    tipo_usuario: req.body.tipo_usuario,
-    idReg_personal: req.body.idReg_personal
 
-   }
-   if(
-    req.body.captcha === undefined ||
-    req.body.captcha === '' ||
-    req.body.captcha === null
-   ){
-    return res.json({"success": false, "msn": "Selecione el captcha"});
-   }
-   ///llave 
-   const secretKey = '6LdxcI8UAAAAAJ-RuzN-uXXvvSLGlIoTOYJVQv_B';
-   ///verificacion 
-   const verifyUrl = `https://google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${req.body.captcha}&remoteip=${req.connection.remoteAddress}`;
-   ///verificacion URL
-   request(verifyUrl, (err, response, body) =>{
-     body = JSON.parse(body);
-     console.log(body);
-     if(body.success !== undefined && !body.success){
-      return res.json({"success": false, "msn":"Fallo  la verificacion captcha"});
-     }
-     var user = new User(reg_user);
-     if(reg_user.contraseña == reg_user.contraseña1){
-      console.log(reg_user.contraseña, reg_user.contraseña1);
-      User.find({correo: req.body.correo}).exec(async (err, docs) => {
-        if(docs != ""){
-          console.log('ya existe ese correo')
-          res.status(400).json({
-                  "msn" : "Ese correo ya esta en uso. Prueba con otro"
-                });
-          // res.send("ya existe ese email")
-        }
-        else{
-          if(reg_user.correo == ""){
-            res.status(400).json({
-              'msn' : 'La dirección de correo electrónico es obligatoria.'
-
-            })
-          }
-          else
-          if(reg_user.contraseña.length < 6){
-              res.status(400).json({
-                'msn' : 'Las contraseñas deben tener al menos 6 caracteres'
-              })
-          }else
-          if(reg_user.tipo_usuario == ""){
-            res.status(400).json({
-              'msn' : 'Introduzca su el tipo de usuuario'
-            });
-          }else {
-            await user.save();
-            console.log('enviado');
-            res.status(200).json({
-              "msn": "enviado",
-            })
-          }
-        }
-      });
-     }
-     else{
-      console.log('las claves no son iguales');
-      res.status(400).json({
-              "msn" : "Las contaceñas no son iguales"
-            });
-     }
-   }) 
-
- });
-
-
-
-getToken = function (headers) {
-    if (headers && headers.authorization) {
-      var parted = headers.authorization.split(' ');
-      if (parted.length === 2) {
-        return parted[1];
-      } else {
-        return null;
-      }
-    } else {
-      return null;
-    }
-};*/
 module.exports = router;

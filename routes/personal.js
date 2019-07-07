@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Personal = require('../models').Registro_personal;
-const service = require('../services')
+
 
 ////registro
 router.post('/personal', function(req, res) {
@@ -88,6 +88,7 @@ router.post('/updatePersonal/:id', (req,res) =>{
       .catch(error => res.status(400).send(error));
   
 });
+
 
     
 module.exports = router;

@@ -58,6 +58,7 @@ router.post('/signin', function(req, res) {
       .then((user) => {
         if (!user) {
           return res.status(401).send({
+            user : false,
             message: 'Authentication failed. User not found.',
           });
         }

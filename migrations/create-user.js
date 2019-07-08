@@ -8,36 +8,27 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      correo: {
-        allowNull: true,
-        unique: true,
+      username: {
         type: Sequelize.STRING
       },
-      contraseña: {
-        allowNull: false,
+      email:{
         type: Sequelize.STRING
       },
-      tipo_usuario:{
+
+      password: {
         type: Sequelize.STRING
-      },
-      idReg_personal:{
-        type: Sequelize.INTEGER,
-        onDelete: 'CASCADE',
-        references: {
-          model: 'Registro_personals',
-          key: 'id',
-          as: 'idReg_personal',
-        }
       },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
       },
-     updatedAt: {
+      updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
-  down: queryInterface /* , Sequelize */ =>  queryInterface.dropTable('Usuarios')
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('Users');
+  }
 };

@@ -1,0 +1,12 @@
+sequelize model:create --name Cuadernos --attributes titulo:text,codigo:integer,grupo:text,saldo:integer
+
+sequelize model:create --name Doctores --attributes nombre:string,especialidad:string  
+
+sequelize model:create --name Turnos --attributes turno:string,sala:string
+
+sequelize model:create --name Especialidades --attributes nombre:string,horarios:string,saldo:string
+
+sequelize model:create --name  --attributes fechaini:date,fechafin:date,codDoctor:integer
+
+
+

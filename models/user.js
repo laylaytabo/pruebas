@@ -1,47 +1,20 @@
 'use strict';
+
 var bcrypt = require('bcrypt-nodejs');
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
-    correo:{
-      type: DataTypes.STRING,
-      unique: {
-        args: true
-      },
-      lowercase:true,
-      validate: {
-        isEmail: {
-          args: false
-        }
-      }
-    }, 
-    contraseña: {
-      type:  DataTypes.STRING,
-      select:true,
-      allowNull:{
-        args: false,
-      },       
-    }, 
-    tipo_usuario:{
-      type:  DataTypes.STRING,
-      allowNull:{
-        args: false,
-      }
-    },
-    idReg_personal: { 
-      type: DataTypes.INTEGER,
-      allowNull:{
-        args: false,
-      }
-    }
-  }, 
-  {});
+    username: DataTypes.STRING,
+    email: DataTypes.STRING,
+    password: DataTypes.STRING
+  }, {});
   User.beforeSave((user, options) => {
-    if (user.changed('contraseña')) {
-      user.contraseña = bcrypt.hashSync(user.contraseña, bcrypt.genSaltSync(10), null);
+    if (user.changed('password')) {
+      user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10), null);
     }
   });
   User.prototype.comparePassword = function (passw, cb) {
-    bcrypt.compare(passw, this.contraseña, function (err, isMatch) {
+    bcrypt.compare(passw, this.password, function (err, isMatch) {
         if (err) {
             return cb(err);
         }
@@ -49,10 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
   User.associate = function(models) {
-    User.belongsTo(models.Registro_personal, {
-      foreignKey: 'idReg_personal',
-      onDelete: 'CASCADE'
-    });
+    // associations can be defined here
   };
   return User;
 };

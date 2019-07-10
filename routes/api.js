@@ -59,7 +59,7 @@ router.post('/signin', function(req, res) {
         if (!user) {
           return res.status(401).send({
             user : false,
-            message: 'Authentication failed. User not found.',
+            message: 'Autentificacion fallida. Usuario no existe.',
           });
         }
         user.comparePassword(req.body.password, (err, isMatch) => {
@@ -70,11 +70,19 @@ router.post('/signin', function(req, res) {
             })
             res.json({success: true, token: 'JWT ' + token});
           } else {
-            res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+            res.status(401).send({success: false, msg: 'Autentificacion fallida. Contraseña incorrecta'});
           }
         })
       })
       .catch((error) => res.status(400).send(error));
+});
+router.get('/list', function(req, res) {
+  
+  User
+      .findAll()
+      .then((users) => res.status(200).send(users))
+      .catch((error) => { res.status(400).send(error); });
+  
 });
 ////////////////////////////////////////////////persoanl//////////////////////////////////////////
 router.get('/personal', passport.authenticate('jwt', { session: false}), function(req, res) {

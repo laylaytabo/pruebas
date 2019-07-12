@@ -9,7 +9,11 @@ const User = require('../models').User;
 router.post('/signup', function(req, res) {
   //console.log(req.body);
   if (!req.body.username  || !req.body.email || !req.body.password ) {
-    res.status(400).send({msg: 'Todos los campos son obligados.'})
+    res.status(400).json({
+      success: false,
+      msg: 'Todos los campos son obligados.'
+    })
+    console.log(" Todos los campos son Obligatorios")
   } else {
     User.findOne({
       where: {
@@ -17,7 +21,11 @@ router.post('/signup', function(req, res) {
       } 
     }).then(user =>{
       if(user){
-        res.status(400).send("Fallo -> Username ya esta en uso!");
+        console.log("Fallo -> Username ya esta en uso!")
+        res.status(400).json({
+          success: false,
+          msg:"Fallo -> Username ya esta en uso!"
+        });
 			return;
       }
       User.findOne({
@@ -26,21 +34,25 @@ router.post('/signup', function(req, res) {
         } 
       }).then(user =>{
         if(user){
-          res.status(400).send("Fallo -> Email ya esta en uso!");
+          console.log("Fallo -> Email ya esta en uso!")
+          res.status(400).json({ 
+            success: false,
+            msg:"Fallo -> Email ya esta en uso!"
+          });
 				return;
         }
         else{
           User
-      .create({
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password
-      })
-      .then((user) => res.status(201).send(user))
-      .catch((error) => {
-        console.log(error);
-        res.status(400).send(error);
-      });
+          .create({
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password
+          })
+          .then((user) => res.status(201).json(user))
+          .catch((error) => {
+            console.log(error);
+            res.status(400).json(error);
+          });
         }
       })
     })

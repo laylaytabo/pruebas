@@ -109,6 +109,21 @@ router.get('/personal', passport.authenticate('jwt', { session: false}), functio
   }
 });
 
+// ruta para mostrar solo los medicos 
+router.get('/Only_Medicos', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if(token){
+    Personal.findAll({
+      where: { cargo: 'medico' }
+    }).then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((error) => { res.status(400).send(error); });   
+  }else{
+    return res.status(403).send({success: false, msg: 'no autorizado.'});
+  }
+})
+
 router.post('/personal', passport.authenticate('jwt', { session: false}), function(req, res) {
   var token = getToken(req.headers);
   if (token) {

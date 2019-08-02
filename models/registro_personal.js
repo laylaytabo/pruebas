@@ -14,10 +14,16 @@ module.exports = (sequelize, DataTypes) => {
     direcion: DataTypes.TEXT,
     telefono: DataTypes.INTEGER
   }, {});
- /* Registro_personal.associate = function(models) {
-    Registro_personal.hasMany(models.User, {
-      foreignKey: 'idReg_personal',
+ Registro_personal.associate = function(models) {
+   Registro_personal.hasMany(models.User, {
+      foreignKey: 'perso_id',
     });
-  };*/
+  Registro_personal.hasMany(models.User, {
+    foreignKey: 'perso_id:',
+    as: 'user',
+  });
+  
+    
+  };
   return Registro_personal;
 };

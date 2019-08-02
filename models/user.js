@@ -4,9 +4,11 @@ var bcrypt = require('bcrypt-nodejs');
 
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
+    perso_id: DataTypes.INTEGER,
     username: DataTypes.STRING,
     email: DataTypes.STRING,
-    password: DataTypes.STRING
+    password: DataTypes.STRING,
+    
   }, {});
   User.beforeSave((user, options) => {
     if (user.changed('password')) {
@@ -22,7 +24,19 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
   User.associate = function(models) {
-    // associations can be defined here
+    User.belongsTo(models.Registro_personal, {
+      foreignKey: 'perso_id',
+      onDelete: 'CASCADE'
+    });
+    /*User.belongsTo(models.Registro_personal, {
+      foreignKey: 'perso_id',
+      as: 'personal'
+    });*/
+    User.belongsToMany(models.Role,{
+      through:'UseRole',
+      as: 'role',
+      foreignKey:'user_id'
+    });
   };
   return User;
 };

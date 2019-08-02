@@ -6,7 +6,12 @@ require('../config/passport')(passport);
 const Personal = require('../models').Registro_personal;
 const User = require('../models').User;
 
-router.post('/signup', function(req, res) {
+
+//////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///////////////////////////
+//////                                                                                                                //////////////////////////
+/////                                   CREAR USUSARIOS                                                               ///////////////////////////
+////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//////////////////////////
+router.post('/signup/:idReg_personal', function(req, res) {
   //console.log(req.body);
   if (!req.body.username  || !req.body.email || !req.body.password ) {
     res.status(400).json({
@@ -18,7 +23,7 @@ router.post('/signup', function(req, res) {
     User.findOne({
       where: {
         username: req.body.username
-      } 
+      }
     }).then(user =>{
       if(user){
         console.log("Fallo -> Username ya esta en uso!")
@@ -31,11 +36,11 @@ router.post('/signup', function(req, res) {
       User.findOne({
         where: {
           email: req.body.email
-        } 
+        }
       }).then(user =>{
         if(user){
           console.log("Fallo -> Email ya esta en uso!")
-          res.status(400).json({ 
+          res.status(400).json({
             success: false,
             msg:"Fallo -> Email ya esta en uso!"
           });
@@ -46,7 +51,8 @@ router.post('/signup', function(req, res) {
           .create({
             username: req.body.username,
             email: req.body.email,
-            password: req.body.password
+            password: req.body.password,
+            idReg_personal: req.params.idReg_personal
           })
           .then((user) => res.status(201).json(user))
           .catch((error) => {
@@ -56,9 +62,14 @@ router.post('/signup', function(req, res) {
         }
       })
     })
-    
+
   }
 });
+
+//////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///////////////////////////
+//////                                                                                                                //////////////////////////
+/////                                   LOGIN                                                                         ///////////////////////////
+////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//////////////////////////
 
 router.post('/signin', function(req, res) {
   User
@@ -88,30 +99,65 @@ router.post('/signin', function(req, res) {
       })
       .catch((error) => res.status(400).send(error));
 });
+//////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///////////////////////////
+//////                                                                                                                //////////////////////////
+/////                                   LISTAR POR ID                                                                 ///////////////////////////
+////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//////////////////////////
+router.get('/mostrarCuenta/:id', function(req, res){
+  var id = req.params.id;
+  User
+  .findAll({
+    where: {idReg_personal: id}
+    //attributes: ['id', ['description', 'descripcion']]
+  }).then((data) => {
+    res.status(200).json(data);
+  })
+})
+
+//////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///////////////////////////
+//////                                                                                                                  //////////////////////////
+/////                                       LISTAR TODOS LOS CUENTAS                                                   ///////////////////////////
+////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//////////////////////////
+
 router.get('/list', function(req, res) {
-  
+
   User
       .findAll()
       .then((users) => res.status(200).send(users))
       .catch((error) => { res.status(400).send(error); });
-  
+
 });
-////////////////////////////////////////////////persoanl//////////////////////////////////////////
-router.get('/personal', passport.authenticate('jwt', { session: false}), function(req, res) {
-  var token = getToken(req.headers);
-  if (token) {
+
+//////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///////////////////////////
+//////                                                                                                                  //////////////////////////
+/////                                       ACTUALIZAR CUENTA                                                          ///////////////////////////
+////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//////////////////////////
+
+//////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///////////////////////////
+//////                                                                                                                  //////////////////////////
+/////                                       LISTAR PERSONAL                                                   ///////////////////////////
+////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//////////////////////////
+router.get('/personal',/* passport.authenticate('jwt', { session: false}),*/ function(req, res) {
+  /*var token = getToken(req.headers);
+  if (token) {*/
     Personal
       .findAll()
       .then((personal) => res.status(200).send(personal))
       .catch((error) => { res.status(400).send(error); });
-  } else {
+/*  } else {
     return res.status(403).send({success: false, msg: 'no autorizado.'});
-  }
+  }*/
 });
 
-router.post('/personal', passport.authenticate('jwt', { session: false}), function(req, res) {
-  var token = getToken(req.headers);
-  if (token) {
+
+//////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///////////////////////////
+//////                                                                                                                  //////////////////////////
+/////                                       AGREGAR PESONAL                                                             ///////////////////////////
+////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//////////////////////////
+
+router.post('/personal',/*, passport.authenticate('jwt', { session: false}), */function(req, res) {
+/*  var token = getToken(req.headers);
+  if (token) {*/
     Personal
       .create({
         nombre: req.body.nombre,
@@ -124,17 +170,22 @@ router.post('/personal', passport.authenticate('jwt', { session: false}), functi
       })
       .then((personal) => res.status(201).send(personal))
       .catch((error) => res.status(400).send(error));
-  } else {
+/*  } else {
     return res.status(403).send({success: false, msg: 'no Autorizado.'});
-  }
+  }*/
 });
+
+//////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///////////////////////////
+//////                                                                                                                  //////////////////////////
+/////                                       MOSTRAR PERSONAL                                                  ///////////////////////////
+////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//////////////////////////
 router.get('/OnlyPersonal/:id', passport.authenticate('jwt', {session:false}), function(req,res) {
   var token=getToken(req.headers);
-  var id = req.params.id;  
+  var id = req.params.id;
   if(token){
     Personal.findAll({
       where: {id: id}
-      //attributes: ['id', ['description', 'descripcion']]
+      
     }).then((data) => {
       res.status(200).json(data);
     })
@@ -144,11 +195,17 @@ router.get('/OnlyPersonal/:id', passport.authenticate('jwt', {session:false}), f
   }
 });
 
+
+//////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///////////////////////////
+//////                                                                                                                  //////////////////////////
+/////                                       ACTUALIZAR PERSONAL                                                   ///////////////////////////
+////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//////////////////////////
+
 router.post('/updatePersonal/:id', passport.authenticate('jwt',{session:false}),function(req,res){
   const { nombre,apellidop,apellidom,ci,cargo,direcion,telefono } = req.body
   var token = getToken(req.headers);
   if(token){
-    Personal          
+    Personal
     .findByPk(req.params.id)
     .then((data) => {
       data.update({
@@ -158,20 +215,20 @@ router.post('/updatePersonal/:id', passport.authenticate('jwt',{session:false}),
           ci: ci || data.ci,
           cargo: cargo || data.cargo,
           direcion: direcion || data.direcion,
-          telefono: telefono || data.telefono                                          
+          telefono: telefono || data.telefono
       })
       .then(update => {
         res.status(200).send({
           message: 'Personal actualizado',
           data: {
-            
+
               nombre: nombre || update.nombre,
               apellidop: apellidop || update.apellidop,
               apellidom: apellidom || update.apellidom,
               ci: ci || update.ci,
               cargo: cargo || update.cargo,
               direcion: direcion || update.direcion,
-              telefono: telefono || update.telefono  
+              telefono: telefono || update.telefono
           }
         })
       })

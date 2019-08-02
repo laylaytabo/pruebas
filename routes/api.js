@@ -149,15 +149,24 @@ router.get('/personal',/* passport.authenticate('jwt', { session: false}),*/ fun
   }*/
 });
 
+// ruta para mostrar solo los medicos 
+router.get('/Only_Medicos', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if(token){
+    Personal.findAll({
+      where: { cargo: 'medico' }
+    }).then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((error) => { res.status(400).send(error); });   
+  }else{
+    return res.status(403).send({success: false, msg: 'no autorizado.'});
+  }
+})
 
-//////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///////////////////////////
-//////                                                                                                                  //////////////////////////
-/////                                       AGREGAR PESONAL                                                             ///////////////////////////
-////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//////////////////////////
-
-router.post('/personal',/*, passport.authenticate('jwt', { session: false}), */function(req, res) {
-/*  var token = getToken(req.headers);
-  if (token) {*/
+router.post('/personal', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
     Personal
       .create({
         nombre: req.body.nombre,
@@ -170,9 +179,9 @@ router.post('/personal',/*, passport.authenticate('jwt', { session: false}), */f
       })
       .then((personal) => res.status(201).send(personal))
       .catch((error) => res.status(400).send(error));
-/*  } else {
+ } else {
     return res.status(403).send({success: false, msg: 'no Autorizado.'});
-  }*/
+  }
 });
 
 //////////////<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///////////////////////////

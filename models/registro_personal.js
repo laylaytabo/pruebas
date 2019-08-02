@@ -17,13 +17,7 @@ module.exports = (sequelize, DataTypes) => {
  Registro_personal.associate = function(models) {
    Registro_personal.hasMany(models.User, {
       foreignKey: 'perso_id',
-    });
-  Registro_personal.hasMany(models.User, {
-    foreignKey: 'perso_id:',
-    as: 'user',
-  });
-  
-    
+    });    
   };
   return Registro_personal;
 };

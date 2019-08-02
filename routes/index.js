@@ -4,7 +4,8 @@ var router = express.Router();
 const personalcontroller = require('../controllers').personal;
 const usercontroller = require('../controllers').user;
 const rolecontroller = require('../controllers').role;
-
+const passport = require('passport');
+require('../config/passport')(passport);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -12,16 +13,20 @@ router.get('/', function(req, res, next) {
 });
 
 /**Personal */
-router.get('/api/personal', personalcontroller.list);
+router.get('/api/personal',/* passport.authenticate('jwt', { session: false}),*/ personalcontroller.listar);
 router.get('/api/personal/:id', personalcontroller.getById);
 router.post('/api/personal', personalcontroller.add);
+router.get('/api/list', personalcontroller.list);
+
+router.get('/api/mostrarTodo', personalcontroller.mostrarTodo);
 
 
 /**user */
 
 router.get('/api/user', usercontroller.listar);
-//router.get('/api/user/:id', usercontroller.getById);
+router.get('/api/user/:id', usercontroller.getById);
 router.post('/api/user/:perso_id', usercontroller.add);
+router.post('/api/login', usercontroller.login);
 
 /**roles */
 

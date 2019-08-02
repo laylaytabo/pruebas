@@ -1,15 +1,32 @@
+const jwt = require('jsonwebtoken');
+//const passport = require('passport');
 const User = require('../models').User;
 const Role = require('../models').Role;
-const Personal = require('../models').Registro_personal;
+//const Personal = require('../models').Registro_personal;
+
+
+
+getToken = function (headers) {
+  if (headers && headers.authorization) {
+    var parted = headers.authorization.split(' ');
+    if (parted.length === 2) {
+      return parted[1];
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+}
 
 module.exports ={
+
     listar(req, res){
+      /*var token = getToken(req.headers)
+      if(token){*/
         return User
         .findAll({
-            include:[/*{
-              model: Personal,
-              as: 'personal'
-            },*/
+            include:[
               {
                 model: Role,
                 as: 'role'
@@ -20,16 +37,20 @@ module.exports ={
         .catch((error) => {
             res.status(400).send(error);
         });
+      /*}else{
+        return res.status(403).send({ message: 'Usuario no autorizado.'});
+      }*/
+        
     },
 
-   /* getById(req, res) {
+   getById(req, res) {
         return User
-          .findById(req.params.id, {
+          .findByPk(req.params.id, {
             include: [
               {
-                model: Personal,
+                /*model: Personal,
                 as: 'personal'
-              },{
+              },*/
               model: Role,
               as: 'role'
             }],
@@ -43,20 +64,87 @@ module.exports ={
             return res.status(200).send(user);
           })
           .catch((error) => res.status(400).send(error));
-    },*/
+    },
 
     add(req, res){
-        return User
-        .create({
-            perso_id: req.params.perso_id,
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password,
+      if(!req.body.username || !req.body.email || !req.body.password){
+        res.status(400).send({
+          message:'Todos los campos son obligados.'
+        })
+        console.log(" Todos los campos son Obligatorios")
+      }else{
+        User.findOne({
+          where:{
+            username: req.body.username
+          }
+        }).then(user =>{
+          if(user){
+            console.log("Fallo -> Username ya esta en uso!")
+            res.status(400).json({
+              success: false,
+              msg:"Fallo -> Username ya esta en uso!"
+            });
+          return;
+          }
+          User.findOne({
+            where: {
+              email: req.body.email
+            }
+          }).then(user =>{
+            if(user){
+              console.log("Fallo -> Email ya esta en uso!")
+              res.status(400).json({
+                success: false,
+                msg:"Fallo -> Email ya esta en uso!"
+              });
+            return;
+            }
+            else{
+              return User
+              .create({
+                 perso_id: req.params.perso_id,
+                 username: req.body.username,
+                 email: req.body.email,
+                 password: req.body.password,
             
         })
         .then((user) => res.status(201).send(user))
         .catch((error) => res.status(400).send(error));
+            }
+          })
+        })
+      }
     },
+
+
+    login(req, res){
+      User
+      .findOne({
+        where: {
+          username: req.body.username
+        }
+      })
+      .then((user) => {
+        if (!user) {
+          return res.status(401).send({
+            user : false,
+            message: 'Autentificacion fallida. Usuario no existe.',
+          });
+        }
+        user.comparePassword(req.body.password, (err, isMatch) => {
+          if(isMatch && !err) {
+            var token = jwt.sign(JSON.parse(JSON.stringify(user)), 'nodeauthsecret', {expiresIn: 86400 * 30});
+            jwt.verify(token, 'nodeauthsecret', function(err, data){
+              console.log(err, data);
+            })
+            res.json({success: true, token: 'JWT ' + token});
+          } else {
+            res.status(401).send({/*success: false,*/ msg: 'Autentificacion fallida. Contraseña incorrecta'});
+          }
+        })
+      })
+      .catch((error) => res.status(400).send(error));
+},
 
 
     addRole(req, res) {
@@ -89,5 +177,6 @@ module.exports ={
           })
           .catch((error) => res.status(400).send(error));
       },
+      
     
 }

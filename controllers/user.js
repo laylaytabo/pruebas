@@ -139,7 +139,7 @@ module.exports ={
             })
             res.json({success: true, token: 'JWT ' + token});
           } else {
-            res.status(401).send({/*success: false,*/ msg: 'Autentificacion fallida. Contraseña incorrecta'});
+            res.status(401).send({success: false, msg: 'Autentificacion fallida. Contraseña incorrecta'});
           }
         })
       })
@@ -177,6 +177,15 @@ module.exports ={
           })
           .catch((error) => res.status(400).send(error));
       },
-      
+    mostrarCuenta(req, res){
+        var id = req.params.id;
+        User
+        .findAll({
+          where: {perso_id: id}
+          //attributes: ['id', ['description', 'descripcion']]
+        }).then((data) => {
+          res.status(200).json(data);
+        })
+      }, 
     
 }

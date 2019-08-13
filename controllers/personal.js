@@ -22,7 +22,28 @@ module.exports= {
             include:[
                 {model:User,
                 include:[
-                    {model:Role, 
+                    {model:Role,
+                        as:'role'
+                    }
+                ]}
+            ]
+        })
+        .then((data) => res.status(200).send(data))
+        .catch((error) => {
+            console.log(error)
+            res.status(400).send(error);
+        });
+    },
+
+    mostrarTodoOne(req,res){
+      const { id  } = req.params
+        return Personal
+        .findAll({
+           where:{id :id},
+            include:[
+                {model:User,
+                include:[
+                    {model:Role,
                         as:'role'
                     }
                 ]}
@@ -64,8 +85,11 @@ module.exports= {
     },
 
     add(req, res){
+
         if (!req.body.nombre || !req.body.apellidop || !req.body.apellidom || !req.body.ci || !req.body.cargo || !req.body.direcion || !req.body.telefono){
+            console.log(" todos los campos son requeridos  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
             res.status(400).send({
+                success: false,
                 message: 'Todos los espacios son requeridos'
             })
         } else{
@@ -77,6 +101,7 @@ module.exports= {
                 if(user){
                     console.log("Fallo >>> El numero de carnet ya esta en uso!")
                     res.status(400).send({
+                      success: false,
                         message: 'Fallo >>> El numero de carnet ya esta en uso!'
                     })
                     return;
@@ -102,7 +127,7 @@ module.exports= {
 
     addUser(req, res){
         return Personal
-    
+
         .create({
             nombre: req.body.nombre,
             apellidop: req.body.apellidop,
@@ -113,7 +138,7 @@ module.exports= {
             telefono: req.body.telefono,
             user: req.body.user,
 
-        
+
         },{
             include: [{
                 model: User,
@@ -123,5 +148,67 @@ module.exports= {
         .then((personal)=> res.status(201).send(personal))
         .catch((error)=> res.status(400).send(error));
     },
+    Only_Medicos(req, res) {
+        const { nombre,apellidop,apellidom,ci,cargo,direcion,telefono } = req.body
+      return Personal
+        .findAll({
+          where: { cargo: 'medico' }
+        }).then((data) => {
+          res.status(200).json(data);
+        })
+        .catch((error) => { res.status(400).send(error); });
 
+    },
+    update(req, res) {
+        const { nombre,apellidop,apellidom,ci,cargo,direcion,telefono } = req.body
+        return Personal
+            
+          .findByPk(req.params.id)
+          .then((data) => {
+            data.update({
+          nombre: nombre || data.nombre,
+          apellidop: apellidop || data.apellidop,
+          apellidom: apellidom || data.apellidom,
+          ci: ci || data.ci,
+          cargo: cargo || data.cargo,
+          direcion: direcion || data.direcion,
+          telefono: telefono || data.telefono
+      })
+      .then(update => {
+        res.status(200).send({
+          message: 'Personal actualizado',
+          data: {
+
+              nombre: nombre || update.nombre,
+              apellidop: apellidop || update.apellidop,
+              apellidom: apellidom || update.apellidom,
+              ci: ci || update.ci,
+              cargo: cargo || update.cargo,
+              direcion: direcion || update.direcion,
+              telefono: telefono || update.telefono
+          }
+        })
+      })
+      .catch(error => res.status(400).send(error));
+    })
+    .catch(error => res.status(400).send(error));
+},
+    
+      delete(req, res) {
+        return Student
+          .findById(req.params.id)
+          .then(student => {
+            if (!student) {
+              return res.status(400).send({
+                message: 'Student Not Found',
+              });
+            }
+            return student
+              .destroy()
+              .then(() => res.status(204).send())
+              .catch((error) => res.status(400).send(error));
+          })
+          .catch((error) => res.status(400).send(error));
+      },
+    
 }

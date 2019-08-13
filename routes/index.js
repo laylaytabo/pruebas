@@ -16,16 +16,20 @@ router.get('/', function(req, res, next) {
 router.get('/api/personal',/* passport.authenticate('jwt', { session: false}),*/ personalcontroller.listar);
 router.get('/api/personal/:id', personalcontroller.getById);
 router.post('/api/personal', personalcontroller.add);
+router.post('/api/UpdaPersonal/:id', personalcontroller.update);
 router.get('/api/list', personalcontroller.list);
 
 router.get('/api/mostrarTodo', personalcontroller.mostrarTodo);
+router.get('/api/Only_Medicos', personalcontroller.Only_Medicos);
+router.get('/api/oneMOstrar/:id', personalcontroller.mostrarTodoOne); // ruta que mustra solo uno
 
 
 /**user */
 
 router.get('/api/user', usercontroller.listar);
 router.get('/api/user/:id', usercontroller.getById);
-router.post('/api/user/:perso_id', usercontroller.add);
+router.get('/api/mostrarCuenta/:id', usercontroller.mostrarCuenta);
+router.post('/api/UsuraioCuenta/:perso_id', usercontroller.add);
 router.post('/api/login', usercontroller.login);
 
 /**roles */

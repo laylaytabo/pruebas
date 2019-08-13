@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
+require('../config/passport')(passport);
 //const passport = require('passport');
 const User = require('../models').User;
 const Role = require('../models').Role;
@@ -125,26 +127,29 @@ module.exports ={
         }
       })
       .then((user) => {
-        if (!user) {
+         if (!user) {
+          console.log(user, "  esto es lo que trae user")
           return res.status(401).send({
             user : false,
             message: 'Autentificacion fallida. Usuario no existe.',
           });
+        }else{
+          user.comparePassword(req.body.password, (err, isMatch) => {
+            if(isMatch && !err) {
+              var token = jwt.sign(JSON.parse(JSON.stringify(user)), 'nodeauthsecret', {expiresIn: 86400 * 30});
+              jwt.verify(token, 'nodeauthsecret', function(err, data){
+                console.log(err, data);
+              })
+              res.json({success: true, token: 'JWT ' + token});
+            } else {
+              res.status(401).send({success: false, msg: 'Autentificacion fallida. Contraseña incorrecta'});
+            }
+          }) 
         }
-        user.comparePassword(req.body.password, (err, isMatch) => {
-          if(isMatch && !err) {
-            var token = jwt.sign(JSON.parse(JSON.stringify(user)), 'nodeauthsecret', {expiresIn: 86400 * 30});
-            jwt.verify(token, 'nodeauthsecret', function(err, data){
-              console.log(err, data);
-            })
-            res.json({success: true, token: 'JWT ' + token});
-          } else {
-            res.status(401).send({success: false, msg: 'Autentificacion fallida. Contraseña incorrecta'});
-          }
-        })
+        
       })
-      .catch((error) => res.status(400).send(error));
-},
+      .catch((error) => console.log(error, " esto es el error"));
+  },
 
 
     addRole(req, res) {

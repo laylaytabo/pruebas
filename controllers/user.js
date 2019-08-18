@@ -120,6 +120,7 @@ module.exports ={
 
 
     login(req, res){
+      console.log(req.path, "   esto es lo que quiero")
       User
       .findOne({
         where: {
@@ -138,9 +139,13 @@ module.exports ={
             if(isMatch && !err) {
               var token = jwt.sign(JSON.parse(JSON.stringify(user)), 'nodeauthsecret', {expiresIn: 86400 * 30});
               jwt.verify(token, 'nodeauthsecret', function(err, data){
-                console.log(err, data);
+              console.log(err, data);
               })
-              res.json({success: true, token: 'JWT ' + token});
+              res.json({
+                success: true, 
+                token: 'JWT ' + token,
+                user
+              });
             } else {
               res.status(401).send({success: false, msg: 'Autentificacion fallida. Contraseña incorrecta'});
             }

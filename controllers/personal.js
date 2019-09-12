@@ -118,7 +118,11 @@ module.exports= {
                       telefono: req.body.telefono
 
                  })
-                 .then((personal) => res.status(201).send(personal))
+                 .then((personal) => res.status(201).send({
+                    success: true,
+                    message: 'Datos Ingresados Correctamente',
+                    personal
+                 }))
                  .catch((error) => res.status(400).send(error));
                 }
             })
@@ -176,7 +180,8 @@ module.exports= {
       })
       .then(update => {
         res.status(200).send({
-          message: 'Personal actualizado',
+            success: true,
+          message: 'Datos  Actualizado',
           data: {
 
               nombre: nombre || update.nombre,

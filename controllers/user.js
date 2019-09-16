@@ -166,13 +166,18 @@ module.exports ={
 
 
     addRole(req, res) {
-        return User
+      Role
+      .findAll({
+        where: { name: req.body.name }
+        //attributes: ['id', ['description', 'descripcion']]
+      }).then((data) => {
+        var id_role = data[0].id
+        console.log(id_role)
+         if(data != ""){
+          return User
           .findByPk(req.body.user_id, {
             include: [
-              /*{
-                model: User,
-                as: 'user'
-              },*/{
+             {
               model: Role,
               as: 'role'
             }],
@@ -183,18 +188,30 @@ module.exports ={
                 message: 'NO FUNCIONA',
               });
             }
-            Role.findByPk(req.body.role_id).then((role) => {
+            Role.findByPk(id_role).then((role) => {
               if (!role) {
                 return res.status(404).send({
                   message: 'No funcions rol',
                 });
               }
               user.addRole(role);
-              return res.status(200).send(user);
+              return res.status(200).send({
+                success:true,
+                msg: " El Desigando Corectamente"
+              });
             })
           })
           .catch((error) => res.status(400).send(error));
-      },
+        }else{
+          res.status(400).json({
+            success:false,
+            msg : "Ese rol no existe"
+          })
+        } 
+      })
+    },
+
+
     mostrarCuenta(req, res){
         var id = req.params.id;
         User

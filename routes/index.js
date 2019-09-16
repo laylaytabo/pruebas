@@ -37,7 +37,8 @@ router.post('/api/login', usercontroller.login);
 router.get('/api/role', rolecontroller.listar);
 router.get('/api/role/:id', rolecontroller.getById);
 router.post('/api/role', rolecontroller.add);
-
+router.get('/api/roleall', rolecontroller.roleall);
+router.get('/api/delrole/:id', rolecontroller.deleterol);
 
 /**agregar roles y cuentas */
 router.post('/api/userrol/crearol', usercontroller.addRole);

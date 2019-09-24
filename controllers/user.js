@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 require('../config/passport')(passport);
 //const passport = require('passport');
+const Personal = require('../models').Registro_personal;
 const User = require('../models').User;
 const Role = require('../models').Role;
 //const Personal = require('../models').Registro_personal;
@@ -214,13 +215,33 @@ module.exports ={
 
     mostrarCuenta(req, res){
         var id = req.params.id;
-        User
+        return User
         .findAll({
-          where: {perso_id: id}
+          where: {perso_id: id},
+          include:[{
+            model:Personal
+          }]
+
           //attributes: ['id', ['description', 'descripcion']]
-        }).then((data) => {
+        })
+        .then((data) => {
           res.status(200).json(data);
         })
       }, 
-    
+
+/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+<<               Reporte solo usuarios                     <<<
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+    alluser(req, res){
+      return User
+      .findAll({
+        include:[{
+          model:Personal, attributes:['nombre','apellidop', 'apellidom']
+        }]
+      })
+      .then(users=> res.status(200).send(users))
+      .catch((error) => {
+          res.status(400).send(error);
+      });
+    }
 }

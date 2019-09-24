@@ -88,7 +88,24 @@ module.exports = {
             .catch(error => res.status(400).send(error));
         })
         .catch(error => res.status(400).send(error))
-    }
-  
+    },
+/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+<<               Reporte solo usuarios                     <<<
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+    listarto(req, res){
+      const { id_personal } = req.params
+      return User
+        .findAll({
+          where:{perso_id:id_personal },
+            include:[{
+                model: Role,
+                as: 'role'                
+            }]
+        })
+        .then((role) => res.status(200).send(role))
+        .catch((error) =>{
+            res.status(400).send(error);
+        });
+      },
 
 }

@@ -22,6 +22,7 @@ router.get('/api/list', personalcontroller.list);
 router.get('/api/mostrarTodo', personalcontroller.mostrarTodo);
 router.get('/api/Only_Medicos', personalcontroller.Only_Medicos);
 router.get('/api/oneMOstrar/:id', personalcontroller.mostrarTodoOne); // ruta que mustra solo uno
+router.get('/api/get_medico_ci/:ci_medico', personalcontroller.get_medico_ci) // ruta para sacar el personal por ci
 
 
 /**user */

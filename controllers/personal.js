@@ -210,5 +210,15 @@ module.exports= {
           })
           .catch((error) => res.status(400).send(error));
       },
-    
+
+      get_medico_ci(req, res) {
+      return Personal
+        .findAll({
+          where: { ci: req.params.ci_medico }
+        }).then((data) => {
+          res.status(200).json(data);
+        })
+        .catch((error) => { res.status(400).send(error); });
+
+    },
 }

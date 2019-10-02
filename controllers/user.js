@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 require('../config/passport')(passport);
 //const passport = require('passport');
+const Personal = require('../models').Registro_personal;
 const User = require('../models').User;
 const Role = require('../models').Role;
 //const Personal = require('../models').Registro_personal;
@@ -80,40 +81,48 @@ module.exports ={
             username: req.body.username
           }
         }).then(user =>{
-          if(user){
+          console.log(user , " esto es si hay el usuario")
+          if(user != null){
             console.log("Fallo -> Username ya esta en uso!")
             res.status(400).json({
               success: false,
               msg:"Fallo -> Username ya esta en uso!"
             });
           return;
+          }else{
+            User.findOne({
+              where: {
+                email: req.body.email
+              }
+            }).then(user =>{
+              if(user != null){
+                console.log("Fallo -> Email ya esta en uso!")
+                res.status(400).json({
+                  success: false,
+                  msg:"Fallo -> Email ya esta en uso!"
+                });
+              return;
+              }
+              else{
+                return User
+                .create({
+                   perso_id: req.params.perso_id,
+                   username: req.body.username,
+                   email: req.body.email,
+                   password: req.body.password,
+              
+                })
+                .then((user) => res.status(201).send({
+                  
+                  success: true,
+                  message: 'Datos Ingresados Correctamente',
+                  user
+                }))
+                .catch((error) => res.status(400).send(error));
+              }
+            })
           }
-          User.findOne({
-            where: {
-              email: req.body.email
-            }
-          }).then(user =>{
-            if(user){
-              console.log("Fallo -> Email ya esta en uso!")
-              res.status(400).json({
-                success: false,
-                msg:"Fallo -> Email ya esta en uso!"
-              });
-            return;
-            }
-            else{
-              return User
-              .create({
-                 perso_id: req.params.perso_id,
-                 username: req.body.username,
-                 email: req.body.email,
-                 password: req.body.password,
-            
-        })
-        .then((user) => res.status(201).send(user))
-        .catch((error) => res.status(400).send(error));
-            }
-          })
+          
         })
       }
     },
@@ -158,13 +167,18 @@ module.exports ={
 
 
     addRole(req, res) {
-        return User
+      Role
+      .findAll({
+        where: { name: req.body.name }
+        //attributes: ['id', ['description', 'descripcion']]
+      }).then((data) => {
+        var id_role = data[0].id
+        console.log(id_role)
+         if(data != ""){
+          return User
           .findByPk(req.body.user_id, {
             include: [
-              /*{
-                model: User,
-                as: 'user'
-              },*/{
+             {
               model: Role,
               as: 'role'
             }],
@@ -175,27 +189,59 @@ module.exports ={
                 message: 'NO FUNCIONA',
               });
             }
-            Role.findByPk(req.body.role_id).then((role) => {
+            Role.findByPk(id_role).then((role) => {
               if (!role) {
                 return res.status(404).send({
                   message: 'No funcions rol',
                 });
               }
               user.addRole(role);
-              return res.status(200).send(user);
+              return res.status(200).send({
+                success:true,
+                msg: " El Desigando Corectamente"
+              });
             })
           })
           .catch((error) => res.status(400).send(error));
-      },
+        }else{
+          res.status(400).json({
+            success:false,
+            msg : "Ese rol no existe"
+          })
+        } 
+      })
+    },
+
+
     mostrarCuenta(req, res){
         var id = req.params.id;
-        User
+        return User
         .findAll({
-          where: {perso_id: id}
+          where: {perso_id: id},
+          include:[{
+            model:Personal
+          }]
+
           //attributes: ['id', ['description', 'descripcion']]
-        }).then((data) => {
+        })
+        .then((data) => {
           res.status(200).json(data);
         })
       }, 
-    
+
+/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+<<               Reporte solo usuarios                     <<<
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+    alluser(req, res){
+      return User
+      .findAll({
+        include:[{
+          model:Personal, attributes:['nombre','apellidop', 'apellidom']
+        }]
+      })
+      .then(users=> res.status(200).send(users))
+      .catch((error) => {
+          res.status(400).send(error);
+      });
+    }
 }

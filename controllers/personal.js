@@ -6,10 +6,10 @@ const Role = require('../models').Role;
 module.exports= {
 
     list(req, res ){
-        return User
+        return Personal
         .findAll({
            include:[
-               {model: Personal,}]
+               {model: User,}]
         })
         .then((personal) => res.status(200).send(personal))
         .catch((error) => {
@@ -118,7 +118,11 @@ module.exports= {
                       telefono: req.body.telefono
 
                  })
-                 .then((personal) => res.status(201).send(personal))
+                 .then((personal) => res.status(201).send({
+                    success: true,
+                    message: 'Datos Ingresados Correctamente',
+                    personal
+                 }))
                  .catch((error) => res.status(400).send(error));
                 }
             })
@@ -176,7 +180,8 @@ module.exports= {
       })
       .then(update => {
         res.status(200).send({
-          message: 'Personal actualizado',
+            success: true,
+          message: 'Datos  Actualizado',
           data: {
 
               nombre: nombre || update.nombre,
@@ -193,8 +198,44 @@ module.exports= {
     })
     .catch(error => res.status(400).send(error));
 },
+/*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+<<               Reporte solo personal                      <<<
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+ onlyPersonal(req, res){
+    const { nombre,apellidop,apellidom,ci,cargo,direcion,telefono } = req.body
+    return Personal
+      .findAll({
+        where: { cargo: 'personal' }
+      }).then((data) => {
+        res.status(200).json(data);
+      })
+      .catch((error) => { res.status(400).send(error); });
+
+ },
+ onlyEnfermera(req, res){
+    const { nombre,apellidop,apellidom,ci,cargo,direcion,telefono } = req.body
+    return Personal
+      .findAll({
+        where: { cargo: 'enfermera' }
+      }).then((data) => {
+        res.status(200).json(data);
+      })
+      .catch((error) => { res.status(400).send(error); });
+
+ },
+ onlyFarma(req, res){
+    const { nombre,apellidop,apellidom,ci,cargo,direcion,telefono } = req.body
+    return Personal
+      .findAll({
+        where: { cargo: 'farmaseutico' }
+      }).then((data) => {
+        res.status(200).json(data);
+      })
+      .catch((error) => { res.status(400).send(error); });
+
+ }
     
-      delete(req, res) {
+      /*delete(req, res) {
         return Student
           .findById(req.params.id)
           .then(student => {
@@ -209,6 +250,7 @@ module.exports= {
               .catch((error) => res.status(400).send(error));
           })
           .catch((error) => res.status(400).send(error));
+<<<<<<< HEAD
       },
 
       get_medico_ci(req, res) {
@@ -221,4 +263,7 @@ module.exports= {
         .catch((error) => { res.status(400).send(error); });
 
     },
+=======
+      },*/
+    
 }

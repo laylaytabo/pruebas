@@ -22,6 +22,8 @@ router.get('/api/list', personalcontroller.list);
 router.get('/api/mostrarTodo', personalcontroller.mostrarTodo);
 router.get('/api/Only_Medicos', personalcontroller.Only_Medicos);
 router.get('/api/oneMOstrar/:id', personalcontroller.mostrarTodoOne); // ruta que mustra solo uno
+router.get('/api/get_medico_ci/:ci_medico', personalcontroller.get_medico_ci) // ruta para sacar el personal por ci
+
 router.get('/api/OnlyPersonal', personalcontroller.onlyPersonal);/// ruta para solo personales
 router.get('/api/OnlyEnfermera', personalcontroller.onlyEnfermera);/// ruta para solo enfermeras
 router.get('/api/OnlyFarma', personalcontroller.onlyFarma);/// ruta para solo farmaceuticos
@@ -51,4 +53,4 @@ router.post('/api/personal/pers_user', personalcontroller.addUser);
 router.get('/api/fecha', personalcontroller.list_fecha)
 
 
-module.exports = router;
+module.exports = router

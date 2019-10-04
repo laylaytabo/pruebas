@@ -233,9 +233,9 @@ module.exports= {
       })
       .catch((error) => { res.status(400).send(error); });
 
- }
+ },
     
-      /*delete(req, res) {
+    delete(req, res) {
         return Student
           .findById(req.params.id)
           .then(student => {
@@ -250,7 +250,6 @@ module.exports= {
               .catch((error) => res.status(400).send(error));
           })
           .catch((error) => res.status(400).send(error));
-<<<<<<< HEAD
       },
 
       get_medico_ci(req, res) {
@@ -263,7 +262,5 @@ module.exports= {
         .catch((error) => { res.status(400).send(error); });
 
     },
-=======
-      },*/
     
 }

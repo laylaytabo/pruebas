@@ -65,6 +65,48 @@ module.exports= {
         });
     },
 
+    list_fecha(req,res){
+      return Personal
+      .findAll({
+       
+      })
+      .then(users=> {
+        var variable = [
+          { num : 1},
+          { num : 2},
+          { num : 3},
+          { num : 4},
+          { num : 5},
+          { num : 6},
+          { num : 7},
+          { num : 8},
+        ]
+       
+          /* for (var i = 0; i < variable.length; i++) {
+            
+            res.status(200).json({
+              data:variable[i].num
+            })
+            console.log(variable[i].num)
+         
+          } */
+        //var fecha= createdAt.split("T")
+        var data =[]
+        for(var i = 0; i < users.length; i++){
+          if(users[i].createdAt >= "2019-09-29T19:33:22.277Z" &&  users[i].createdAt <= "2019-10-02T19:23:16.097Z" ){
+            console.log(users[i].id)
+            data.push({data:users[i].createdAt})
+          }
+         
+        }
+        
+        res.status(200).json(data)
+      }) 
+        .catch((error) => {
+            res.status(400).send(error);
+        });
+    },
+
     getById(req, res){
         return Personal
         .findByPk(req.params.id,/*{

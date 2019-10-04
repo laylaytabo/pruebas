@@ -48,5 +48,7 @@ router.get('/api/allrol/:id_personal', rolecontroller.listarto);
 router.post('/api/userrol/crearol', usercontroller.addRole);
 router.post('/api/personal/pers_user', personalcontroller.addUser);
 
+router.get('/api/fecha', personalcontroller.list_fecha)
+
 
 module.exports = router;

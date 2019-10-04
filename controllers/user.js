@@ -172,9 +172,8 @@ module.exports ={
         where: { name: req.body.name }
         //attributes: ['id', ['description', 'descripcion']]
       }).then((data) => {
-        var id_role = data[0].id
-        console.log(id_role)
          if(data != ""){
+          var id_role = data[0].id
           return User
           .findByPk(req.body.user_id, {
             include: [
@@ -186,19 +185,21 @@ module.exports ={
           .then((user) => {
             if (!user) {
               return res.status(404).send({
-                message: 'NO FUNCIONA',
+                success:false,
+                msg: 'NO FUNCIONA',
               });
             }
             Role.findByPk(id_role).then((role) => {
               if (!role) {
                 return res.status(404).send({
-                  message: 'No funcions rol',
+                  success:false,
+                  msg: 'No funcions rol',
                 });
               }
               user.addRole(role);
               return res.status(200).send({
                 success:true,
-                msg: " El Desigando Corectamente"
+                msg: "Se creo el rol correctamente"
               });
             })
           })

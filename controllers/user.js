@@ -208,9 +208,9 @@ module.exports ={
   
                 })
                 .then((datas) => {
+                  console.log(datas[0].role.length, "  esto es lo que quiero ver <<<<<<<<<<<<<<<")
                   
-                  
-                   if( datas[0].role != "" || datas[0].role == null || datas[0].role.length == 0 ){
+                   if( datas[0].role.length != 0 ){
 
                     res.status(400).json({
                       success:false,

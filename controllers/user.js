@@ -71,7 +71,8 @@ module.exports ={
 
     add(req, res){
       if(!req.body.username || !req.body.email || !req.body.password){
-        res.status(400).send({
+        res.status(400).json({
+          success:false,
           message:'Todos los campos son obligados.'
         })
         console.log(" Todos los campos son Obligatorios")
@@ -83,10 +84,10 @@ module.exports ={
         }).then(user =>{
           console.log(user , " esto es si hay el usuario")
           if(user != null){
-            console.log("Fallo -> Username ya esta en uso!")
+            console.log("Usuario ya esta en uso!")
             res.status(400).json({
               success: false,
-              msg:"Fallo -> Username ya esta en uso!"
+              msg:"Usuario ya esta en uso!"
             });
           return;
           }else{
@@ -167,50 +168,83 @@ module.exports ={
 
 
     addRole(req, res) {
-      Role
-      .findAll({
-        where: { name: req.body.name }
-        //attributes: ['id', ['description', 'descripcion']]
-      }).then((data) => {
-         if(data != ""){
-          var id_role = data[0].id
-          return User
-          .findByPk(req.body.user_id, {
-            include: [
-             {
-              model: Role,
-              as: 'role'
-            }],
-          })
-          .then((user) => {
-            if (!user) {
-              return res.status(404).send({
-                success:false,
-                msg: 'NO FUNCIONA',
-              });
-            }
-            Role.findByPk(id_role).then((role) => {
-              if (!role) {
+      if(req.body.name == ""){
+        res.status(400).json({
+          success:false,
+          msg:"No seleciono rol"
+        })
+      }else{
+        Role
+        .findAll({
+          where: { name: req.body.name }
+          //attributes: ['id', ['description', 'descripcion']]
+        }).then((data) => {
+           if(data != ""){
+            var id_role = data[0].id
+            return User
+            .findByPk(req.body.user_id, {
+              include: [
+               {
+                model: Role,
+                as: 'role'
+              }],
+            })
+            .then((user) => {
+              if (!user) {
                 return res.status(404).send({
                   success:false,
-                  msg: 'No funcions rol',
+                  msg: 'NO FUNCIONA',
                 });
               }
-              user.addRole(role);
-              return res.status(200).send({
-                success:true,
-                msg: "Se creo el rol correctamente"
-              });
+              Role.findByPk(id_role).then((role) => {
+                return User
+                .findAll({
+                  where:{id: req.body.user_id},
+                    include:[
+                      {
+                        model: Role,
+                        as: 'role'
+                    }],
+  
+                })
+                .then((datas) => {
+                  
+                  
+                   if( datas[0].role != "" || datas[0].role == null || datas[0].role.length == 0 ){
+
+                    res.status(400).json({
+                      success:false,
+                      msg: "El usuraio ya tiene un rol"
+                    })
+
+                  }else{
+
+                    if (!role) {
+                      return res.status(404).send({
+                        success:false,
+                        msg: 'No funcions rol',
+                      });
+                    }
+                    user.addRole(role);
+                    return res.status(200).send({
+                      success:true,
+                      msg: "Se creo correctamente"
+                    });
+
+                  }
+                })  
+              })
             })
-          })
-          .catch((error) => res.status(400).send(error));
-        }else{
-          res.status(400).json({
-            success:false,
-            msg : "Ese rol no existe"
-          })
-        } 
-      })
+            .catch((error) => res.status(400).send(error));
+          }else{
+            res.status(400).json({
+              success:false,
+              msg : "El tipo de usuario no existe"
+            })
+          } 
+        })
+      }
+     
     },
 
 

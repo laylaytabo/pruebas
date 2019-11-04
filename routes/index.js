@@ -1,10 +1,16 @@
 var express = require('express');
 var router = express.Router();
 
+const role_user = require('../models').UseRole;
+
+
 const personalcontroller = require('../controllers').personal;
 const usercontroller = require('../controllers').user;
 const rolecontroller = require('../controllers').role;
 const passport = require('passport');
+
+const Roles_user = require('../controllers').Roles_user;
+
 require('../config/passport')(passport);
 
 /* GET home page. */
@@ -52,5 +58,49 @@ router.post('/api/personal/pers_user', personalcontroller.addUser);
 
 router.get('/api/fecha', personalcontroller.list_fecha)
 
+//table role user
+router.get ('/roel_user', (req,res) => {
+  return role_user
+  .findAll()
+  .then((rol) => res.status(200).send(rol))
+  .catch((error) => { res.status(400).send(error); });
+})
+
+router.post('/uodate_role_user/:id', (req,res) => {
+  const { id } = req.params
+  const { role_id } = req.body
+  console.log(role_id)
+  return role_user
+  .findOne({
+    where:{user_id:14}
+  })
+  .then((data) => {
+    //console.log(data, " <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<", id )
+    data.update({
+      role_id: role_id || data.role_id         
+    })
+    .then(update => {
+      res.status(200).send({
+        success:true,
+        msg: 'Datos actualizados',
+        data: {                  
+          role_id: role_id || update.role_id              
+        }
+      })
+    })
+    .catch(error => {
+      console.log(error);
+      res.status(400).json({
+        error
+      })
+    });
+  })
+  .catch(error => {
+    console.log(error);
+    res.status(400).json({
+      error
+    })
+  });
+})
 
 module.exports = router

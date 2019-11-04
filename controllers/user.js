@@ -168,7 +168,7 @@ module.exports ={
 
 
     addRole(req, res) {
-      if(req.body.name == ""){
+      if(!req.body.name){
         res.status(400).json({
           success:false,
           msg:"No seleciono rol"

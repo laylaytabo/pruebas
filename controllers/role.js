@@ -1,5 +1,7 @@
 const Role = require('../models').Role;
 const User = require('../models').User;
+const Personal = require('../models').Registro_personal;
+
 
 module.exports = {
     listar(req, res){
@@ -107,5 +109,33 @@ module.exports = {
             res.status(400).send(error);
         });
       },
+
+    // role personal
+
+    role_farmacia(req, res){
+      return Role
+      .findAll({
+        where:{name : "farmacia"},
+        attributes:['id','name','createdAt'],
+          include:[{
+              model: User,
+              attributes:['id','username'],
+              as: 'user',
+              
+              include:[{
+                model: Personal,
+                attributes:['id','nombre', 'apellidop','apellidom']
+              }]
+          }],
+          order:[
+              ['createdAt', 'ASC'],
+              [{ model: User, as: 'user'}, 'createdAt', 'ASC'],
+          ],
+      })
+      .then((role) => res.status(200).send(role))
+      .catch((error) =>{
+          res.status(400).send(error);
+      });
+  },
 
 }

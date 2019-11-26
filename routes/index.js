@@ -51,12 +51,14 @@ router.post('/api/role', rolecontroller.add);
 router.get('/api/roleall', rolecontroller.roleall);
 router.get('/api/delrole/:id', rolecontroller.deleterol);
 router.get('/api/allrol/:id_personal', rolecontroller.listarto);
+router.get('/api/role_farmacia', rolecontroller.role_farmacia);
 
 /**agregar roles y cuentas */
 router.post('/api/userrol/crearol', usercontroller.addRole);
 router.post('/api/personal/pers_user', personalcontroller.addUser);
 
 router.get('/api/fecha', personalcontroller.list_fecha)
+
 
 //table role user
 router.get ('/roel_user', (req,res) => {

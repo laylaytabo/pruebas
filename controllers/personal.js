@@ -3,6 +3,9 @@ const User = require('../models').User;
 const UseRole = require('../models').UseRole;
 const Role = require('../models').Role;
 
+const sequelize = require('sequelize');
+const Op = sequelize.Op;
+
 module.exports= {
 
     list(req, res ){
@@ -314,4 +317,47 @@ module.exports= {
       }
     })
   } */
+
+  //filter datas 
+  filter_list(req, res){
+    /* var _q = Personal;
+    _q.findAll({
+        where: {[Op.and]: [{cargo: {[Op.eq]: 'medico'}}, {createdAt: {[Op.gte]: '2019-11-26' }}, {createdAt: {[Op.lte]: '2019-11-26' }}]},
+    })
+    .then(datas => {
+        if(datas == ""){
+            res.status(400).json({
+                success:false,
+                msg:"No hay nada que mostrar"
+            })
+        }else{
+            res.status(200).json(datas)
+        }
+    }); */
+    
+     const { fecha_inicio, fecha_final, cargo }  = req.body
+    console.log(req.body, "  <<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+      if(!fecha_final || !fecha_inicio || !cargo){
+          res.status(400).json({
+              success:false,
+              msg:"Inserte fecha inicio y fecha final y el personal para poder buscar un rago de fechas"
+          })
+      }else{
+          var _q = Personal;
+          _q.findAll({
+              where: {[Op.and]: [{cargo: {[Op.eq]: cargo}}, {createdAt: {[Op.gte]: fecha_inicio }}, {createdAt: {[Op.lte]: fecha_final }}]},
+          })
+          .then(datas => {
+            console.log(datas, "  3333333333333333333333333333333333333333333")
+              if(datas == ""){
+                  res.status(400).json({
+                      success:false,
+                      msg:"No hay nada que mostrar"
+                  })
+              }else{
+                  res.status(200).json(datas)
+              }
+      });
+    } 
+  },
 }

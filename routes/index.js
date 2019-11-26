@@ -34,6 +34,8 @@ router.get('/api/OnlyPersonal', personalcontroller.onlyPersonal);/// ruta para s
 router.get('/api/OnlyEnfermera', personalcontroller.onlyEnfermera);/// ruta para solo enfermeras
 router.get('/api/OnlyFarma', personalcontroller.onlyFarma);/// ruta para solo farmaceuticos
 
+router.post('/api/filter_list', personalcontroller.filter_list)
+
 /**user */
 
 router.get('/api/user', usercontroller.listar);

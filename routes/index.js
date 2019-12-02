@@ -55,6 +55,11 @@ router.get('/api/delrole/:id', rolecontroller.deleterol);
 router.get('/api/allrol/:id_personal', rolecontroller.listarto);
 router.get('/api/role_farmacia', rolecontroller.role_farmacia);
 
+router.get('/api/role_alamcen', rolecontroller.role_almacen);
+
+router.get('/api/role_hospitalizacion', rolecontroller.role_hospitalizacion);
+
+
 /**agregar roles y cuentas */
 router.post('/api/userrol/crearol', usercontroller.addRole);
 router.post('/api/personal/pers_user', personalcontroller.addUser);

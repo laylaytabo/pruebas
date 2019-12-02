@@ -110,8 +110,7 @@ module.exports = {
         });
       },
 
-    // role personal
-
+    // role farmacia
     role_farmacia(req, res){
       return Role
       .findAll({
@@ -136,6 +135,61 @@ module.exports = {
       .catch((error) =>{
           res.status(400).send(error);
       });
-  },
+    },
+
+    // lista las personas que tiene rol de almacen
+    role_almacen(req, res){
+      return Role
+      .findAll({
+        where:{name : "Almacen"},
+        attributes:['id','name','createdAt'],
+          include:[{
+              model: User,
+              attributes:['id','username'],
+              as: 'user',
+              
+              include:[{
+                model: Personal,
+                attributes:['id','nombre', 'apellidop','apellidom']
+              }]
+          }],
+          order:[
+              ['createdAt', 'ASC'],
+              [{ model: User, as: 'user'}, 'createdAt', 'ASC'],
+          ],
+      })
+      .then((role) => res.status(200).send(role))
+      .catch((error) =>{
+          res.status(400).send(error);
+      });
+    },
+
+    //role hospitalizacion
+
+    role_hospitalizacion(req, res){
+      return Role
+      .findAll({
+        where:{name : "hospitalizacion"},
+        attributes:['id','name','createdAt'],
+          include:[{
+              model: User,
+              attributes:['id','username'],
+              as: 'user',
+              
+              include:[{
+                model: Personal,
+                attributes:['id','nombre', 'apellidop','apellidom', 'ci']
+              }]
+          }],
+          order:[
+              ['createdAt', 'ASC'],
+              [{ model: User, as: 'user'}, 'createdAt', 'ASC'],
+          ],
+      })
+      .then((role) => res.status(200).send(role))
+      .catch((error) =>{
+          res.status(400).send(error);
+      });
+    },
 
 }

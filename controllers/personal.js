@@ -157,7 +157,6 @@ module.exports= {
         .catch((error)=> res.status(400).send(error));
     },
     Only_Medicos(req, res) {
-        const { nombre,apellidop,apellidom,ci,cargo,direcion,telefono } = req.body
       return Personal
         .findAll({
           where: { cargo: 'medico' }

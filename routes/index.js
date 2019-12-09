@@ -36,6 +36,8 @@ router.get('/api/OnlyFarma', personalcontroller.onlyFarma);/// ruta para solo fa
 
 router.post('/api/filter_list', personalcontroller.filter_list)///filtrar personal
 
+router.post('/api/baja_personal/:id',personalcontroller.baja_personal )
+
 /**user */
 
 router.get('/api/user', usercontroller.listar);

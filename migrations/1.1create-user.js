@@ -8,6 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      estado:{
+        type: Sequelize.BOOLEAN, 
+        allowNull: false, 
+        defaultValue: false
+      },
       perso_id: {
         type: Sequelize.INTEGER,
         onDelete: 'CASCADE',

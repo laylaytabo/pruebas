@@ -13,6 +13,99 @@ const Roles_user = require('../controllers').Roles_user;
 
 require('../config/passport')(passport);
 
+/*
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+               esto es para el back up
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
+ */
+
+var request = require("request");
+var fs = require("fs")
+const { exec } = require('child_process');
+
+//console.log("Service online Check server")
+setInterval(function(){
+  console.log("make request ");
+  createLog("BackUp created in ")
+  backupDatabase();
+}, 300*60*1000);
+
+
+router.get('/ruta_para_back_up', (req,res) => {
+  
+   backupDatabase( () => {
+    res.status(200).json("esto es el mensaje")
+   })
+  
+})
+
+function createLog (msn) {
+
+  if (!fs.existsSync('./databaselog.txt')) {
+
+    fs.writeFile("./databaselog.txt", "backupcreated ");
+  }
+  fs.readFile('./log.txt', (err, data) => {
+      if (err) throw err;
+      var date = new Date();
+      var info = data + "\n" + msn + " " + date;
+      fs.writeFile("./log.txt", info);
+  });
+
+}
+
+function backupDatabase (callback) {
+
+  console.log(" si entro no se si esta funcionando ")
+
+  exec('sudo docker exec serviceproyecto_postgres_1 pg_dumpall -U postgres > /home/alejandro/backups/serviceproyecto_postgres_1.sql', (err, stdout, stderr) => {
+    //exec('sudo exec -t serviceproyecto_postgres_1 pg_dumpall -c -U postgres > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql', (err, stdout, stderr) => {
+    //exec('sudo docker exec -it 2263bc4a5b0d pg_dump --db serviceproyecto_postgres_1 -o /backup/serviceproyecto_postgres_1', (err, stdout, stderr) => {
+    console.log(stdout, "    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")  
+    if (err) {
+        // node couldn't execute the command
+        console.log(err, " error 3")
+        return;
+      }
+      callback()
+  });
+  /* exec('sudo' , (err, stdout, stderr) => {
+    console.log(" <<<<<<<<<<<<<<<<<<<<<<" )
+    if(err){
+      console.log(err, " error 1")
+
+    }
+    
+
+    exec('GIRLSgeneration1' , (err, stdout, stderr) => {
+      if(err){
+        console.log(err, " error 2")
+      }
+      exec('docker exec serviceproyecto_postgres_1 pg_dumpall -U postgres > /home/alejandro/backups/serviceproyecto_postgres_1.sql', (err, stdout, stderr) => {
+        //exec('sudo exec -t serviceproyecto_postgres_1 pg_dumpall -c -U postgres > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql', (err, stdout, stderr) => {
+        //exec('sudo docker exec -it 2263bc4a5b0d pg_dump --db serviceproyecto_postgres_1 -o /backup/serviceproyecto_postgres_1', (err, stdout, stderr) => {
+          if (err) {
+            // node couldn't execute the command
+            console.log(err, " error 3")
+            return;
+          }
+      });
+
+    })
+
+  }) */
+  
+  
+}
+
+/* 
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+*/
+
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });

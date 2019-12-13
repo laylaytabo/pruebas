@@ -302,6 +302,7 @@ module.exports ={
     },
     
     filter_usuario(req, res) {
+      console.log(req.body, "  personal")
       const { fecha_inicio, fecha_final }  = req.body
       if(!fecha_final || !fecha_inicio){
           res.status(400).json({
@@ -312,7 +313,13 @@ module.exports ={
           var _q = User;
           _q.findAll({
           where: {[Op.and]: [{createdAt: {[Op.gte]: fecha_inicio }}, {createdAt: {[Op.lte]: fecha_final }}]},
-          })
+          include:[
+            {model: Personal}
+          ]
+          }
+         
+          )
+          
           .then(datas => {
               if(datas == ""){
                   res.status(400).json({

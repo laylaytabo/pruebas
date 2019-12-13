@@ -251,21 +251,40 @@ module.exports ={
 
 
     mostrarCuenta(req, res){
-        var id = req.params.id;
-        return User
-        .findAll({
-          where: {perso_id: id},
-          include:[{
-            model:Personal
-          }]
-
-          //attributes: ['id', ['description', 'descripcion']]
+      var id = req.params.id;
+      return User
+      .findAll({
+        where: {perso_id: id},
+        include:[{
+          model:Personal
+        }]
+        //attributes: ['id', ['description', 'descripcion']]
+      })
+      .then((data) => {
+        res.status(200).json(data);
+      })
+    },
+    EliminarUsuario(req, res) {
+      const{id} =req.params
+      return User
+        .findByPk(id)
+        .then(users => {
+          if(!users) {
+            return res.status(400).send({
+              success:false,
+              message: 'Ocurrio un Problema',
+            });
+          }
+          return users
+            .destroy()
+            .then(() => res.status(200).send({
+              success: true,
+              message: 'La Cuenta sea Eliminado Correctamente'
+            }))
+            .catch(error => res.status(400).send(error));
         })
-        .then((data) => {
-          res.status(200).json(data);
-        })
-      }, 
-
+        .catch(error => res.status(400).send(error))
+    },
 /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 <<               Reporte solo usuarios                     <<<
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/

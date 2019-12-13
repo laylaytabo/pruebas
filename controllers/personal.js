@@ -92,6 +92,7 @@ module.exports= {
 
         if (!req.body.nombre || !req.body.apellidop || !req.body.apellidom || !req.body.ci || !req.body.cargo || !req.body.direcion || !req.body.telefono){
             console.log(" todos los campos son requeridos  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+          
             res.status(400).send({
                 success: false,
                 message: 'Todos los espacios son requeridos'
@@ -133,6 +134,53 @@ module.exports= {
         }
     },
 
+    registrar_personal(req, res){
+
+      if (!req.body.nombre || !req.body.apellidop || !req.body.apellidom || !req.body.ci || !req.body.cargo || !req.body.direcion || !req.body.telefono || !req.body.estado_adm){
+          console.log(" todos los campos son requeridos  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+        
+          res.status(400).send({
+              success: false,
+              message: 'Todos los espacios son requeridos'
+          })
+      } else{
+          Personal.findOne({
+              where:{
+                  ci: req.body.ci
+              }
+          }).then(user =>{
+              if(user){
+                  console.log("Fallo >>> El numero de carnet ya esta en uso!")
+                  res.status(400).send({
+                    success: false,
+                      message: 'Fallo >>> El numero de carnet ya esta en uso!'
+                  })
+                  return;
+              }
+              else{
+                  return Personal
+                  .create({
+                    estado_adm: req.body.estado_adm,
+                    nombre: req.body.nombre,
+                    apellidop: req.body.apellidop,
+                    apellidom: req.body.apellidom,
+                    ci: req.body.ci,
+                    cargo: req.body.cargo,
+                    direcion: req.body.direcion,
+                    telefono: req.body.telefono
+
+               })
+               .then((personal) => res.status(201).send({
+                  success: true,
+                  message: 'Datos Ingresados Correctamente',
+                  personal
+               }))
+               .catch((error) => res.status(400).send(error));
+              }
+          })
+      }
+  },
+    
     addUser(req, res){
         return Personal
 

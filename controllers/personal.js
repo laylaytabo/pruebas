@@ -359,4 +359,40 @@ module.exports= {
       });
     } 
   },
+
+  //dar de baja al paciente 
+  baja_personal(req, res) {
+    const { estado } = req.body
+    return Personal        
+    .findByPk(req.params.id)
+    .then((data) => {
+      data.update({
+        estado: estado || data.estado,
+     
+  })
+  .then(update => {
+    res.status(200).send({
+      success: true,
+      msg: 'Datos  Actualizado',
+      data: {
+        estado: estado || update.estado        
+      }
+    })
+  })
+    .catch(error => {
+      console.log(error),
+      res.status(400).json({
+        success:false,
+        msg:'no se pudo dar de baja al personal'
+      })
+    });
+  })
+    .catch(error => {
+      console.log(error)
+      res.status(500).json({
+        success:false,
+        msg:'error'
+      })
+    });
+  },
 }

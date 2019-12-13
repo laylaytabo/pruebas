@@ -1,6 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const Registro_personal = sequelize.define('Registro_personal', {
+    estado: DataTypes.BOOLEAN,
     nombre: DataTypes.TEXT,
     apellidop: DataTypes.TEXT,
     apellidom: DataTypes.TEXT,

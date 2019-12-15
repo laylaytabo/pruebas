@@ -91,11 +91,11 @@ module.exports= {
     add(req, res){
 
         if (!req.body.nombre || !req.body.apellidop || !req.body.apellidom || !req.body.ci || !req.body.cargo || !req.body.direcion || !req.body.telefono){
-            console.log(" todos los campos son requeridos  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+           // console.log(" todos los campos son requeridos  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
           
             res.status(400).send({
                 success: false,
-                message: 'Todos los espacios son requeridos'
+                message: 'Todos los Espacios son Requeridos!!'
             })
         } else{
             Personal.findOne({
@@ -104,10 +104,10 @@ module.exports= {
                 }
             }).then(user =>{
                 if(user){
-                    console.log("Fallo >>> El numero de carnet ya esta en uso!")
+                    //console.log("Fallo >>> El numero de carnet ya esta en uso!")
                     res.status(400).send({
                       success: false,
-                        message: 'Fallo >>> El numero de carnet ya esta en uso!'
+                        message: 'El numero de carnet '+' '+ req.body.ci+ ' '+'ya esta en uso!!'
                     })
                     return;
                 }
@@ -125,7 +125,7 @@ module.exports= {
                  })
                  .then((personal) => res.status(201).send({
                     success: true,
-                    message: 'Datos Ingresados Correctamente',
+                    message: 'Datos Ingresados Correctamente.',
                     personal
                  }))
                  .catch((error) => res.status(400).send(error));
@@ -137,11 +137,11 @@ module.exports= {
     registrar_personal(req, res){
 
       if (!req.body.nombre || !req.body.apellidop || !req.body.apellidom || !req.body.ci || !req.body.cargo || !req.body.direcion || !req.body.telefono || !req.body.estado_adm){
-          console.log(" todos los campos son requeridos  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+          //console.log(" todos los campos son requeridos  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
         
           res.status(400).send({
               success: false,
-              message: 'Todos los espacios son requeridos'
+              message: 'Todos los Espacios son Requeridos!!'
           })
       } else{
           Personal.findOne({
@@ -150,7 +150,7 @@ module.exports= {
               }
           }).then(user =>{
               if(user){
-                  console.log("Fallo >>> El numero de carnet ya esta en uso!")
+                  //console.log("Fallo >>> El numero de carnet ya esta en uso!")
                   res.status(400).send({
                     success: false,
                       message: 'Fallo >>> El numero de carnet ya esta en uso!'
@@ -172,7 +172,7 @@ module.exports= {
                })
                .then((personal) => res.status(201).send({
                   success: true,
-                  message: 'Datos Ingresados Correctamente',
+                  message: 'Datos Ingresados Correctamente.',
                   personal
                }))
                .catch((error) => res.status(400).send(error));
@@ -230,9 +230,9 @@ module.exports= {
           telefono: telefono || data.telefono
       })
       .then(update => {
-        res.status(200).send({
-            success: true,
-          message: 'Datos  Actualizado',
+        res.status(200).json({
+          success: true,
+          message: 'Datos  Actualizado.',
           data: {
 
               nombre: nombre || update.nombre,
@@ -383,11 +383,11 @@ module.exports= {
     }); */
     
      const { fecha_inicio, fecha_final, cargo }  = req.body
-    console.log(req.body, "  <<<<<<<<<<<<<<<<<<<<<<<<<<<<")
+    //console.log(req.body, "  <<<<<<<<<<<<<<<<<<<<<<<<<<<<")
       if(!fecha_final || !fecha_inicio || !cargo){
           res.status(400).json({
               success:false,
-              msg:"Inserte fecha inicio y fecha final y el personal para poder buscar un rago de fechas"
+              msg:"Inserte Fecha inicio y Fecha final y el tipo de personal para poder buscar un rago de fechas"
           })
       }else{
           var _q = Personal;
@@ -395,7 +395,7 @@ module.exports= {
               where: {[Op.and]: [{cargo: {[Op.eq]: cargo}}, {createdAt: {[Op.gte]: fecha_inicio }}, {createdAt: {[Op.lte]: fecha_final }}]},
           })
           .then(datas => {
-            console.log(datas, "  3333333333333333333333333333333333333333333")
+            //console.log(datas, "  3333333333333333333333333333333333333333333")
               if(datas == ""){
                   res.status(400).json({
                       success:false,

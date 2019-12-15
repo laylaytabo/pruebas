@@ -84,9 +84,9 @@ module.exports ={
             username: req.body.username
           }
         }).then(user =>{
-          console.log(user , " esto es si hay el usuario")
+          //console.log(user , " esto es si hay el usuario")
           if(user != null){
-            console.log("Usuario ya esta en uso!")
+            //console.log("Usuario ya esta en uso!")
             res.status(400).json({
               success: false,
               msg:"Usuario ya esta en uso!"
@@ -102,7 +102,7 @@ module.exports ={
                 console.log("Fallo -> Email ya esta en uso!")
                 res.status(400).json({
                   success: false,
-                  msg:"Fallo -> Email ya esta en uso!"
+                  msg:"Email"+ " "+ req.body.email + " "+"ya esta en uso!"
                 });
               return;
               }
@@ -118,7 +118,7 @@ module.exports ={
                 .then((user) => res.status(201).send({
                   
                   success: true,
-                  message: 'Datos Ingresados Correctamente',
+                  message: 'Datos Ingresados Correctamente.',
                   user
                 }))
                 .catch((error) => res.status(400).send(error));
@@ -216,7 +216,7 @@ module.exports ={
 
                     res.status(400).json({
                       success:false,
-                      msg: "El usuraio ya tiene un rol"
+                      msg: "El Usuraio ya tiene un rol"
                     })
 
                   }else{
@@ -230,7 +230,7 @@ module.exports ={
                     user.addRole(role);
                     return res.status(200).send({
                       success:true,
-                      msg: "Se creo correctamente"
+                      msg: "Se creo correctamente."
                     });
 
                   }
@@ -241,7 +241,7 @@ module.exports ={
           }else{
             res.status(400).json({
               success:false,
-              msg : "El tipo de usuario no existe"
+              msg : "El tipo de Usuario no existe"
             })
           } 
         })
@@ -307,7 +307,7 @@ module.exports ={
       if(!fecha_final || !fecha_inicio){
           res.status(400).json({
               success:false,
-              msg:"Inserte fecha inicio y fecha final  para poder buscar un rago de fechas"
+              msg:"Inserte echa inicio y fecha final  para poder buscar un rago de fechas"
           })
       }else{
           var _q = User;

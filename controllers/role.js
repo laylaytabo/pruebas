@@ -49,7 +49,7 @@ module.exports = {
           console.log("Fallo >> El Rol ya existe...!")
           res.status(400).send({
             success:false,
-            message:'Fallo >> El Rol ya existe...!'
+            message:'El Rol ya existe...!'
         })
         return;
         }else{

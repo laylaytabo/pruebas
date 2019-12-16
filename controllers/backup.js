@@ -1,7 +1,7 @@
 var request = require("request");
 var fs = require("fs")
 const { exec } = require('child_process');
-console.log("Service online Check server")
+//console.log("Service online Check server")
 setInterval(function(){
   console.log("make request ");
   createLog("BackUp created in ")
@@ -24,6 +24,7 @@ function createLog (msn) {
 
 }
 function backupDatabase () {
+  //docker exec -t your-db-container pg_dumpall -c -U postgres > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql
   exec('sudo docker exec -it 122f7bf1b887 mongodump --db moviedb -o /dump', (err, stdout, stderr) => {
 
     if (err) {

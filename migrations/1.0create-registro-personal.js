@@ -13,6 +13,11 @@ module.exports = {
         allowNull: false, 
         defaultValue: false
       },
+      estado_adm:{
+        type: Sequelize.BOOLEAN, 
+        allowNull: false, 
+        defaultValue: false
+      },
       nombre: {
         type: Sequelize.TEXT
       },

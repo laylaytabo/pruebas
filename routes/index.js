@@ -130,6 +130,7 @@ router.get('/api/OnlyFarma', personalcontroller.onlyFarma);/// ruta para solo fa
 router.post('/api/filter_list', personalcontroller.filter_list)///filtrar personal
 
 router.post('/api/baja_personal/:id',personalcontroller.baja_personal )
+router.post('/api/regsiter_administrador', personalcontroller.registrar_personal) // ruta para poder registrar administrador
 
 /**user */
 
@@ -141,6 +142,8 @@ router.post('/api/login', usercontroller.login);
 router.get('/api/allUser', usercontroller.alluser);//ruta para todos los usuarioa
 
 router.post('/api/filter_users', usercontroller.filter_usuario)///filtrar usuarios
+router.get('/api/eliminUser/:id', usercontroller.EliminarUsuario)///eliminar usuarios
+
 /**roles */
 
 router.get('/api/role', rolecontroller.listar);

@@ -408,7 +408,7 @@ module.exports= {
     } 
   },
 
-  //dar de baja al paciente 
+  //dar de baja al paciente //////////////////////
   baja_personal(req, res) {
     const { estado } = req.body
     return Personal        
@@ -421,7 +421,7 @@ module.exports= {
   .then(update => {
     res.status(200).send({
       success: true,
-      msg: 'Datos  Actualizado',
+      msg: 'Operación reaizada correctamente',
       data: {
         estado: estado || update.estado        
       }

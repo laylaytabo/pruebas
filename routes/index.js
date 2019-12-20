@@ -36,10 +36,120 @@ setInterval(function(){
 router.get('/ruta_para_back_up', (req,res) => {
   
    backupDatabase( () => {
-    res.status(200).json("esto es el mensaje")
+    res.status(200).json("Creado")
    })
   
 })
+
+function backupDatabase (callback) {
+  console.log(" si entro no se si esta funcionando ")
+  exec('sudo docker exec serviceproyecto_postgres_1 pg_dumpall -U postgres > /home/alejandro/backup/serviceproyecto_postgres_1.sql', (err, stdout, stderr) => {
+    console.log(stdout, "    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")  
+    if (err) {        
+        console.log(err, " error 3")
+        return;
+      }
+      callback()
+  });
+}
+router.get('/ruta_para_back_up2', (req,res) => {
+  
+  backupDatabase2( () => {
+   res.status(200).json("Creado")
+  })
+ 
+})
+
+function backupDatabase2 (callback) {
+ console.log(" si entro no se si esta funcionando ")
+ exec('sudo docker exec serviceproyecto_postgres_1 pg_dumpall -U postgres > /home/alejandro/backup/serviceproyecto_postgres_2.sql', (err, stdout, stderr) => {
+   console.log(stdout, "    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")  
+   if (err) {        
+       console.log(err, " error 3")
+       return;
+     }
+     callback()
+ });
+}
+
+router.get('/ruta_para_back_up3', (req,res) => {
+  
+  backupDatabase3( () => {
+   res.status(200).json("Creado")
+  })
+ 
+})
+
+function backupDatabase3 (callback) {
+ console.log(" si entro no se si esta funcionando ")
+ exec('sudo docker exec serviceproyecto_postgres_1 pg_dumpall -U postgres > /home/alejandro/backup/serviceproyecto_postgres_3.sql', (err, stdout, stderr) => {
+   console.log(stdout, "    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")  
+   if (err) {        
+       console.log(err, " error 3")
+       return;
+     }
+     callback()
+ });
+}
+
+router.get('/ruta_para_back_up4', (req,res) => {
+  
+  backupDatabase4( () => {
+   res.status(200).json("Creado")
+  })
+ 
+})
+
+function backupDatabase4 (callback) {
+ console.log(" si entro no se si esta funcionando ")
+ exec('sudo docker exec serviceproyecto_postgres_1 pg_dumpall -U postgres > /home/alejandro/backup/serviceproyecto_postgres_4.sql', (err, stdout, stderr) => {
+   console.log(stdout, "    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")  
+   if (err) {        
+       console.log(err, " error 3")
+       return;
+     }
+     callback()
+ });
+}
+
+router.get('/ruta_para_back_up5', (req,res) => {
+  
+  backupDatabase5( () => {
+   res.status(200).json("Creado")
+  })
+ 
+})
+
+function backupDatabase5 (callback) {
+ console.log(" si entro no se si esta funcionando ")
+ exec('sudo docker exec serviceproyecto_postgres_1 pg_dumpall -U postgres > /home/alejandro/backup/serviceproyecto_postgres_5.sql', (err, stdout, stderr) => {
+   console.log(stdout, "    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")  
+   if (err) {        
+       console.log(err, " error 3")
+       return;
+     }
+     callback()
+ });
+}
+router.get('/ruta_para_back_up6', (req,res) => {
+  
+  backupDatabase6( () => {
+   res.status(200).json("Creado")
+  })
+ 
+})
+
+function backupDatabase6 (callback) {
+ console.log(" si entro no se si esta funcionando ")
+ exec('sudo docker exec serviceproyecto_postgres_1 pg_dumpall -U postgres > /home/alejandro/backup/serviceproyecto_postgres_6.sql', (err, stdout, stderr) => {
+   console.log(stdout, "    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")  
+   if (err) {        
+       console.log(err, " error 3")
+       return;
+     }
+     callback()
+ });
+}
 
 function createLog (msn) {
 
@@ -60,7 +170,7 @@ function backupDatabase (callback) {
 
   console.log(" si entro no se si esta funcionando ")
 
-  exec('sudo docker exec serviceproyecto_postgres_1 pg_dumpall -U postgres > /home/alejandro/backups/serviceproyecto_postgres_1.sql', (err, stdout, stderr) => {
+  exec('sudo docker exec serviceproyecto_postgres_1 pg_dumpall -U postgres > /home/alejandro/backup/serviceproyecto_postgres_1.sql', (err, stdout, stderr) => {
     //exec('sudo exec -t serviceproyecto_postgres_1 pg_dumpall -c -U postgres > dump_`date +%d-%m-%Y"_"%H_%M_%S`.sql', (err, stdout, stderr) => {
     //exec('sudo docker exec -it 2263bc4a5b0d pg_dump --db serviceproyecto_postgres_1 -o /backup/serviceproyecto_postgres_1', (err, stdout, stderr) => {
     console.log(stdout, "    <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")  
